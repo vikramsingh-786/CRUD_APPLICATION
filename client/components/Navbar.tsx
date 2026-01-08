@@ -1,26 +1,27 @@
-
 import { LogOut, LayoutGrid } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useAuth } from "@/context/AuthContext";
-import { useRouter } from "next/navigation";
 
 interface NavbarProps {
-  userName?: string;       
-  onLogout?: () => void;   
-  showLogo?: boolean;      
+  userName?: string;
+  onLogout?: () => void;
+  showLogo?: boolean;
 }
 
 export const Navbar = ({ userName, onLogout, showLogo = true }: NavbarProps) => {
-  const { user, logout } = useAuth(); // Assuming your AuthContext has logout
-  const router = useRouter();
+  const { user, logout } = useAuth();
 
   const handleLogout = () => {
+    // Call custom onLogout if provided
     if (onLogout) {
       onLogout();
-    } else {
-      logout?.();
     }
-    router.push("/login");
+
+    // Clear auth state
+    logout?.();
+
+    // Instant full redirect — no blank flash
+    window.location.href = "/login";
   };
 
   return (
@@ -57,7 +58,7 @@ export const Navbar = ({ userName, onLogout, showLogo = true }: NavbarProps) => 
               <div className="h-8 w-px bg-slate-300/40 dark:bg-slate-700/40" />
               <button
                 onClick={handleLogout}
-                className="text-slate-400 hover:text-red-500 transition"
+                className="text-slate-400 hover:text-red-500 transition-colors duration-200 p-2 rounded-lg hover:bg-red-500/10"
                 title="Logout"
               >
                 <LogOut className="w-6 h-6" />

@@ -49,10 +49,8 @@ export default function RegisterPage() {
     try {
       await register(formData.name, formData.email, formData.password);
       
-      // Instant success feedback
       toast.success("Account created successfully! Redirecting...");
       
-      // Smooth redirect after toast is visible
       setTimeout(() => {
         window.location.href = "/dashboard";
       }, 800);
@@ -70,7 +68,6 @@ export default function RegisterPage() {
     }
   };
 
-  // Password strength calculation
   const getPasswordStrength = () => {
     if (formData.password.length === 0) return { level: 0, label: "", color: "" };
     if (formData.password.length < 6) return { level: 33, label: "Weak", color: "bg-red-500" };
@@ -130,7 +127,6 @@ export default function RegisterPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Full Name */}
             <div>
               <label
                 className="block text-sm font-semibold mb-2"
@@ -156,7 +152,6 @@ export default function RegisterPage() {
               )}
             </div>
 
-            {/* Email */}
             <div>
               <label
                 className="block text-sm font-semibold mb-2"
@@ -182,7 +177,6 @@ export default function RegisterPage() {
               )}
             </div>
 
-            {/* Password */}
             <div>
               <label
                 className="block text-sm font-semibold mb-2"

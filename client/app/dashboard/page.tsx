@@ -35,7 +35,6 @@ export default function Dashboard() {
     password: "",
   });
 
-  // Inline editing states
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editValue, setEditValue] = useState("");
 
@@ -69,14 +68,13 @@ export default function Dashboard() {
   if (!newTask.trim()) return;
 
   const optimisticTask = {
-    _id: Date.now().toString(), // Temporary client-side ID
+    _id: Date.now().toString(), 
     title: newTask,
     status: "pending" as const,
     createdAt: new Date().toISOString(),
     user: user?._id || "",
   };
 
-  // Instant UI update + feedback
   setTasks((prev) => [optimisticTask, ...prev]);
   setNewTask("");
   toast.success("Task added");
@@ -275,9 +273,7 @@ export default function Dashboard() {
                           )}
                         </div>
 
-                        {/* Edit & Delete Buttons - Always visible */}
                         <div className="flex items-center gap-2">
-                          {/* Edit Button - Hidden when already editing */}
                           {editingId !== task._id && (
                             <button
                               onClick={() => startEditing(task._id, task.title)}
@@ -300,8 +296,6 @@ export default function Dashboard() {
                               </svg>
                             </button>
                           )}
-
-                          {/* Delete Button - Always visible */}
                           <button
                             onClick={() => deleteTask(task._id)}
                             className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 transition-colors"
