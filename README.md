@@ -136,8 +136,7 @@ judix-task-manager/
 
 ### Step 1: Clone the Repository
 ```bash
-git clone https://github.com/yourusername/judix-task-manager.git
-cd judix-task-manager
+git clone https://github.com/vikramsingh-786/CRUD_APPLICATION.git
 ```
 
 ### Step 2: Setup Backend
@@ -501,8 +500,8 @@ Password: test123
 
 ## 👨‍💻 Developer Information
 
-**Developed by**: [Your Name]  
-**Email**: shivam@judix.in  
+**Developed by**: Vikram Singh
+**Email**: becomerdeveloper@gmail.com 
 **Assignment**: Full-Stack Developer Intern  
 **Submission Date**: January 2026
 
