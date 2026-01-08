@@ -1,0 +1,65 @@
+# Node.js / npm
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Logs
+logs
+*.log
+logs/*.log
+
+# Build / Dist (if you ever add a build step)
+dist/
+build/
+
+# Dependency directories (if using pnpm or yarn workspaces)
+.pnpm-store/
+.yarn/cache
+.yarn/unplugged
+
+# Editor / OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Testing / Coverage
+coverage/
+.nyc_output/
+jest-cache/
+
+# MongoDB local data (if you ever run local dump/restore)
+dump/
+
+# PM2 process manager
+.pm2/
+pm2.log
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Lock files (optional – some teams commit them, but often ignored in monorepos)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# Security-sensitive files
+*.pem
+*.key
+*.crt
+
+# Optional: ignore nodemon restart file
+.nodemonrestart
