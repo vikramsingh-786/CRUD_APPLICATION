@@ -31,7 +31,7 @@ export default function RegisterPage() {
 
   const validateForm = () => {
     const newErrors: any = {};
-    if (formData.name.length < 2)
+    if (formData.name.trim().length < 2)
       newErrors.name = "Name must be at least 2 characters";
     if (!/\S+@\S+\.\S+/.test(formData.email))
       newErrors.email = "Invalid email address";
@@ -48,16 +48,20 @@ export default function RegisterPage() {
     setIsSubmitting(true);
     try {
       await register(formData.name, formData.email, formData.password);
+      
+      // Instant success feedback
+      toast.success("Account created successfully! Redirecting...");
+      
+      // Smooth redirect after toast is visible
+      setTimeout(() => {
+        window.location.href = "/dashboard";
+      }, 800);
     } catch (error: any) {
-      const msg =
-        error.response?.data?.message || "Registration failed";
-
+      const msg = error.response?.data?.message || "Registration failed";
       const apiErrors = error.response?.data?.errors;
 
       if (Array.isArray(apiErrors)) {
-        apiErrors.forEach((err: any) =>
-          toast.error(err.msg || err.message)
-        );
+        apiErrors.forEach((err: any) => toast.error(err.msg || err.message));
       } else {
         toast.error(msg);
       }
@@ -66,14 +70,15 @@ export default function RegisterPage() {
     }
   };
 
-  const passwordStrength =
-    formData.password.length === 0
-      ? 0
-      : formData.password.length < 6
-      ? 33
-      : formData.password.length < 10
-      ? 66
-      : 100;
+  // Password strength calculation
+  const getPasswordStrength = () => {
+    if (formData.password.length === 0) return { level: 0, label: "", color: "" };
+    if (formData.password.length < 6) return { level: 33, label: "Weak", color: "bg-red-500" };
+    if (formData.password.length < 10) return { level: 66, label: "Good", color: "bg-yellow-500" };
+    return { level: 100, label: "Strong", color: "bg-green-500" };
+  };
+
+  const strength = getPasswordStrength();
 
   return (
     <div
@@ -141,7 +146,7 @@ export default function RegisterPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
-                  className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-gray-50 dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none text-gray-900 dark:text-white"
+                  className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-gray-50 dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none text-gray-900 dark:text-white transition-all"
                   placeholder="John Doe"
                   required
                 />
@@ -167,7 +172,7 @@ export default function RegisterPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
                   }
-                  className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-gray-50 dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none text-gray-900 dark:text-white"
+                  className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-gray-50 dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none text-gray-900 dark:text-white transition-all"
                   placeholder="you@example.com"
                   required
                 />
@@ -193,7 +198,7 @@ export default function RegisterPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, password: e.target.value })
                   }
-                  className="w-full pl-12 pr-12 py-3.5 rounded-xl bg-gray-50 dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none text-gray-900 dark:text-white"
+                  className="w-full pl-12 pr-12 py-3.5 rounded-xl bg-gray-50 dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none text-gray-900 dark:text-white transition-all"
                   placeholder="••••••••"
                   required
                 />
@@ -202,47 +207,68 @@ export default function RegisterPage() {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                 >
-                  {showPassword ? <EyeOff /> : <Eye />}
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
 
+              {/* Password Strength Indicator */}
+              {formData.password && (
+                <div className="mt-3">
+                  <div className="flex justify-between text-xs mb-1">
+                    <span style={{ color: "var(--card-muted)" }}>Password strength</span>
+                    <span className={
+                      strength.level < 50 ? "text-red-500" :
+                      strength.level < 100 ? "text-yellow-500" : "text-green-500"
+                    }>
+                      {strength.label}
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all duration-500 ${strength.color}`}
+                      style={{ width: `${strength.level}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+
               {errors.password && (
-                <p className="text-sm text-red-500 mt-1">
-                  {errors.password}
-                </p>
+                <p className="text-sm text-red-500 mt-2">{errors.password}</p>
               )}
             </div>
 
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-xl font-semibold text-lg hover:shadow-xl hover:shadow-blue-500/30 transition-all flex items-center justify-center gap-2 mt-6"
+              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-xl font-semibold text-lg hover:shadow-xl hover:shadow-blue-500/30 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-3 mt-8"
             >
               {isSubmitting ? (
                 <>
-                  <Loader2 className="animate-spin" />
+                  <Loader2 className="w-5 h-5 animate-spin" />
                   Creating account...
                 </>
               ) : (
                 <>
                   Create Account
-                  <CheckCircle2 />
+                  <CheckCircle2 className="w-5 h-5" />
                 </>
               )}
             </button>
           </form>
 
-          <Link
-            href="/login"
-            className="block w-full text-center py-3 font-medium transition-colors"
-            style={{ color: "var(--card-text)" }}
-          >
-            Sign in instead →
-          </Link>
+          <div className="mt-6 text-center">
+            <Link
+              href="/login"
+              className="text-sm font-medium transition-colors hover:underline"
+              style={{ color: "var(--card-text)" }}
+            >
+              Already have an account? Sign in →
+            </Link>
+          </div>
         </div>
 
         <p
-          className="text-center text-sm mt-6"
+          className="text-center text-xs mt-8"
           style={{ color: "var(--card-muted)" }}
         >
           By creating an account, you agree to our Terms & Privacy Policy
